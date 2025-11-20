@@ -1,5 +1,10 @@
 # Python依赖包
 
+# Flask - Web框架
+Flask>=3.0.0
+Flask-CORS>=4.0.0
+Werkzeug>=3.0.0
+
 # Selenium - Web自动化框架
 selenium>=4.15.0
 

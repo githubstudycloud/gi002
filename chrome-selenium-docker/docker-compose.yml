@@ -61,7 +61,7 @@ services:
       - automation-network
 
     # 启动命令（可以通过环境变量覆盖）
-    command: ${DOCKER_COMMAND:-python /app/app/main.py}
+    command: ${DOCKER_COMMAND:-python /app/app/web_service.py}
 
     # 资源限制
     deploy:
