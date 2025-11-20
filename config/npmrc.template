@@ -1,0 +1,38 @@
+# npm配置文件模板
+# 使用方法：将此文件复制为 .npmrc 并根据需要修改
+
+# 默认NPM源
+registry=https://registry.npmjs.org/
+
+# 国内镜像源示例（取消注释使用）
+# 淘宝镜像
+# registry=https://registry.npmmirror.com/
+
+# 腾讯云镜像
+# registry=https://mirrors.cloud.tencent.com/npm/
+
+# 华为云镜像
+# registry=https://mirrors.huaweicloud.com/repository/npm/
+
+# 企业内网源示例
+# registry=http://your-internal-npm.company.com/
+
+# HTTPS严格SSL
+# strict-ssl=false
+
+# 超时设置（毫秒）
+fetch-timeout=300000
+
+# 重试设置
+fetch-retries=3
+fetch-retry-mintimeout=10000
+fetch-retry-maxtimeout=60000
+
+# 日志级别
+loglevel=warn
+
+# 进度条
+progress=true
+
+# 缓存设置
+cache=/root/.npm

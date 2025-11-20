@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  chrome-automation:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chrome-selenium-automation
+    image: chrome-selenium-automation:latest
+
+    # 环境变量配置
+    environment:
+      # Python源配置（可选）
+      - PIP_INDEX_URL=${PIP_INDEX_URL:-https://pypi.org/simple}
+      - PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST:-}
+
+      # NPM源配置（可选）
+      - NPM_REGISTRY=${NPM_REGISTRY:-https://registry.npmjs.org/}
+
+      # Chrome配置
+      - CHROME_HEADLESS=${CHROME_HEADLESS:-true}
+      - CHROME_NO_SANDBOX=${CHROME_NO_SANDBOX:-true}
+      - CHROME_DISABLE_DEV_SHM=${CHROME_DISABLE_DEV_SHM:-true}
+
+      # 应用配置
+      - APP_MODE=${APP_MODE:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENABLE_VNC=${ENABLE_VNC:-false}
+
+      # 自定义环境变量
+      - TZ=Asia/Shanghai
+
+    # 卷挂载
+    volumes:
+      # 挂载应用代码（开发模式）
+      - ./app:/app/app
+
+      # 挂载配置文件
+      - ./config:/app/config
+
+      # 挂载日志目录
+      - ./logs:/app/logs
+
+      # 挂载数据目录
+      - ./data:/app/data
+
+      # 挂载自定义脚本
+      - ./scripts:/app/scripts
+
+      # 共享内存（解决Chrome崩溃问题）
+      - /dev/shm:/dev/shm
+
+    # 端口映射
+    ports:
+      - "${APP_PORT:-8080}:8080"
+      - "${SELENIUM_PORT:-4444}:4444"
+      - "${VNC_PORT:-5900}:5900"  # VNC端口（如果启用）
+
+    # 网络配置
+    networks:
+      - automation-network
+
+    # 启动命令（可以通过环境变量覆盖）
+    command: ${DOCKER_COMMAND:-python /app/app/main.py}
+
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+    # 重启策略
+    restart: unless-stopped
+
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # 特权模式（某些Chrome功能可能需要）
+    # privileged: true
+
+    # 安全选项
+    security_opt:
+      - seccomp:unconfined
+
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# 网络配置
+networks:
+  automation-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# 卷配置（可选，用于持久化数据）
+volumes:
+  chrome-data:
+    driver: local
+  chrome-logs:
+    driver: local
