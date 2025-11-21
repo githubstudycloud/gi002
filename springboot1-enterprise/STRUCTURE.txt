@@ -1,0 +1,196 @@
+Spring Boot 1.x 企业级框架 - 项目结构树
+================================================================================
+
+springboot1-enterprise/
+│
+├── 📄 pom.xml                                    # 父 POM，依赖管理
+├── 📄 README.md                                  # 项目说明文档
+├── 📄 PROJECT_OVERVIEW.md                        # 项目总览
+├── 📄 COMPONENTS.md                              # 组件功能详解
+├── 📄 STRUCTURE.txt                              # 项目结构（本文档）
+├── 📄 .gitignore                                 # Git 忽略配置
+│
+├── 🚀 start-all.sh                               # Linux/Mac 启动脚本
+├── 🚀 start-all.bat                              # Windows 启动脚本
+├── 🛑 stop-all.sh                                # 停止脚本
+├── 🧪 test-api.sh                                # API 测试脚本
+│
+├── 📦 enterprise-common/                         # 通用模块
+│   ├── pom.xml
+│   └── src/main/java/com/enterprise/common/
+│       ├── response/
+│       │   ├── Result.java                       # 统一响应对象
+│       │   └── ResultCode.java                   # 响应状态码枚举
+│       ├── exception/
+│       │   ├── BusinessException.java            # 业务异常
+│       │   └── GlobalExceptionHandler.java       # 全局异常处理器
+│       └── util/
+│           └── JwtUtil.java                      # JWT 工具类
+│
+├── 📦 enterprise-eureka/                         # Eureka 注册中心（18761）
+│   ├── pom.xml
+│   ├── src/main/java/com/enterprise/eureka/
+│   │   └── EurekaServerApplication.java          # Eureka 启动类
+│   └── src/main/resources/
+│       └── application.yml                       # Eureka 配置
+│
+├── 📦 enterprise-config/                         # 配置中心（18888）
+│   ├── pom.xml
+│   ├── src/main/java/com/enterprise/config/
+│   │   └── ConfigServerApplication.java          # Config Server 启动类
+│   └── src/main/resources/
+│       ├── application.yml                       # Config Server 配置
+│       └── config-repo/
+│           └── application.yml                   # 公共配置文件
+│
+├── 📦 enterprise-gateway/                        # API 网关（18080）
+│   ├── pom.xml
+│   ├── src/main/java/com/enterprise/gateway/
+│   │   ├── GatewayApplication.java               # 网关启动类
+│   │   └── filter/
+│   │       └── AuthFilter.java                   # 认证过滤器
+│   └── src/main/resources/
+│       ├── bootstrap.yml                         # 引导配置
+│       └── application.yml                       # 网关配置（路由、Zuul）
+│
+├── 📦 enterprise-admin/                          # 监控中心（18090）
+│   ├── pom.xml
+│   ├── src/main/java/com/enterprise/admin/
+│   │   └── AdminApplication.java                 # Admin 启动类
+│   └── src/main/resources/
+│       └── application.yml                       # Admin 配置
+│
+├── 📦 enterprise-user-service/                   # 用户服务（18081）
+│   ├── pom.xml
+│   ├── src/main/java/com/enterprise/user/
+│   │   ├── UserServiceApplication.java           # 用户服务启动类
+│   │   ├── entity/
+│   │   │   └── User.java                         # 用户实体
+│   │   ├── controller/
+│   │   │   └── UserController.java               # 用户控制器
+│   │   └── config/
+│   │       └── SwaggerConfig.java                # Swagger 配置
+│   └── src/main/resources/
+│       ├── bootstrap.yml                         # 引导配置
+│       └── application.yml                       # 用户服务配置
+│
+├── 📦 enterprise-order-service/                  # 订单服务（18082）
+│   ├── pom.xml
+│   ├── src/main/java/com/enterprise/order/
+│   │   ├── OrderServiceApplication.java          # 订单服务启动类
+│   │   ├── entity/
+│   │   │   └── Order.java                        # 订单实体
+│   │   ├── controller/
+│   │   │   └── OrderController.java              # 订单控制器
+│   │   ├── feign/
+│   │   │   ├── UserServiceClient.java            # Feign 客户端
+│   │   │   └── UserServiceFallback.java          # 降级处理
+│   │   └── config/
+│   │       └── SwaggerConfig.java                # Swagger 配置
+│   └── src/main/resources/
+│       ├── bootstrap.yml                         # 引导配置
+│       └── application.yml                       # 订单服务配置
+│
+└── 🐳 docker/                                    # Docker 配置
+    ├── docker-compose.yml                        # 中间件编排
+    ├── init-sql/
+    │   └── 01-init-user-db.sql                   # MySQL 初始化脚本
+    └── data/                                     # 数据卷（运行时生成）
+        ├── mysql/
+        ├── redis/
+        └── rabbitmq/
+
+================================================================================
+统计信息：
+================================================================================
+微服务模块:      7 个
+Java 类:        20+ 个
+配置文件:       15+ 个
+文档文件:       4 个
+脚本文件:       4 个
+中间件:         3 个 (MySQL, Redis, RabbitMQ)
+端口使用:       9 个 (全部非常用端口)
+
+================================================================================
+端口分配表：
+================================================================================
+服务                    端口        说明
+--------------------------------------------------------------------------------
+Eureka Server          18761       服务注册中心
+Config Server          18888       配置中心
+API Gateway            18080       Zuul 网关
+Admin Server           18090       监控中心
+User Service           18081       用户服务
+Order Service          18082       订单服务
+MySQL                  13306       数据库
+Redis                  16379       缓存
+RabbitMQ (AMQP)       25672       消息队列
+RabbitMQ (管理)        15672       管理界面
+
+================================================================================
+核心技术栈：
+================================================================================
+框架层:
+  - Spring Boot 1.5.22.RELEASE
+  - Spring Cloud Edgware.SR6
+
+微服务组件:
+  - Eureka (服务注册发现)
+  - Config Server (配置中心)
+  - Zuul (API 网关)
+  - Feign (服务调用)
+  - Ribbon (负载均衡)
+  - Hystrix (熔断降级)
+  - Spring Boot Admin (服务监控)
+
+数据层:
+  - MyBatis 1.3.2
+  - Druid 1.1.10
+  - MySQL 5.7
+
+缓存层:
+  - Redis 5.0
+
+消息队列:
+  - RabbitMQ 3.8
+
+工具类:
+  - Swagger 2.9.2 (API 文档)
+  - JWT 0.9.1 (认证授权)
+  - Lombok 1.18.8
+  - FastJSON 1.2.47
+
+================================================================================
+启动顺序（重要！）：
+================================================================================
+1. Docker 中间件 (MySQL, Redis, RabbitMQ) → 等待 10 秒
+2. Eureka Server (18761)                  → 等待 15 秒
+3. Config Server (18888)                  → 等待 10 秒
+4. Gateway (18080)                        → 等待 10 秒
+5. Admin (18090)                          → 等待 5 秒
+6. User Service (18081)                   → 等待 5 秒
+7. Order Service (18082)                  → 完成
+
+建议使用 start-all.sh 或 start-all.bat 自动启动所有服务
+
+================================================================================
+访问地址：
+================================================================================
+服务监控:
+  Eureka:    http://localhost:18761
+  Config:    http://localhost:18888/application/default
+  Admin:     http://localhost:18090
+
+API 文档:
+  User API:  http://localhost:18081/swagger-ui.html
+  Order API: http://localhost:18082/swagger-ui.html
+
+网关入口:
+  Gateway:   http://localhost:18080/api
+
+中间件:
+  MySQL:     localhost:13306 (root/root123)
+  Redis:     localhost:16379
+  RabbitMQ:  http://localhost:15672 (admin/admin123)
+
+================================================================================

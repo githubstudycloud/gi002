@@ -1,0 +1,29 @@
+# 开发环境配置 - 连接远程服务器中间件
+# 远程服务器IP: 192.168.241.128
+
+spring:
+  # 数据源配置 - MySQL
+  datasource:
+    url: jdbc:mysql://192.168.241.128:13306/enterprise?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: Enterprise@2024
+
+  # Redis配置
+  data:
+    redis:
+      host: 192.168.241.128
+      port: 16379
+      password: Enterprise@2024
+
+  # RabbitMQ配置
+  rabbitmq:
+    host: 192.168.241.128
+    port: 15672
+    username: admin
+    password: Enterprise@2024
+    virtual-host: /enterprise
+
+# 日志级别
+logging:
+  level:
+    com.enterprise: DEBUG

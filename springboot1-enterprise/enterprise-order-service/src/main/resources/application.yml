@@ -1,0 +1,48 @@
+server:
+  port: 18082  # 使用非常用端口
+
+spring:
+  application:
+    name: enterprise-order-service
+
+  # Redis 配置（使用非常用端口）
+  redis:
+    host: localhost
+    port: 16379
+    password:
+    database: 1
+    timeout: 3000
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1
+
+  # RabbitMQ 配置（使用非常用端口）
+  rabbitmq:
+    host: localhost
+    port: 25672
+    username: admin
+    password: admin123
+    virtual-host: /
+
+# Eureka 配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
+
+# Feign 配置
+feign:
+  hystrix:
+    enabled: true
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.enterprise.order: DEBUG

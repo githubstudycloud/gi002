@@ -1,0 +1,75 @@
+server:
+  port: 18081  # 使用非常用端口
+
+spring:
+  application:
+    name: enterprise-user-service
+
+  # 数据源配置（使用非常用端口）
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/enterprise_user?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root123
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+
+  # Redis 配置（使用非常用端口）
+  redis:
+    host: localhost
+    port: 16379
+    password:
+    database: 0
+    timeout: 3000
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1
+
+  # RabbitMQ 配置（使用非常用端口）
+  rabbitmq:
+    host: localhost
+    port: 25672
+    username: admin
+    password: admin123
+    virtual-host: /
+
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.enterprise.user.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+
+# Eureka 配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
+
+# Feign 配置
+feign:
+  hystrix:
+    enabled: true
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.enterprise.user: DEBUG

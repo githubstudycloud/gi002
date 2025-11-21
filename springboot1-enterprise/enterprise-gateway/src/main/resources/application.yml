@@ -1,0 +1,58 @@
+server:
+  port: 18080  # 使用非常用端口
+
+spring:
+  application:
+    name: enterprise-gateway
+
+# Zuul 路由配置
+zuul:
+  # 路由前缀
+  prefix: /api
+  # 忽略所有服务的默认路由
+  ignored-services: '*'
+  # 路由配置
+  routes:
+    user-service:
+      path: /user/**
+      service-id: enterprise-user-service
+      strip-prefix: false
+    order-service:
+      path: /order/**
+      service-id: enterprise-order-service
+      strip-prefix: false
+  # 敏感头信息（设为空表示传递所有头信息）
+  sensitive-headers:
+  # 重试机制
+  retryable: true
+
+# Ribbon 负载均衡配置
+ribbon:
+  ReadTimeout: 5000
+  ConnectTimeout: 3000
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 1
+
+# Hystrix 熔断配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+# Eureka 配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.netflix.zuul: DEBUG

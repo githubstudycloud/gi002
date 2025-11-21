@@ -1,0 +1,28 @@
+server:
+  port: 18888  # 使用非常用端口
+
+spring:
+  application:
+    name: enterprise-config-server
+  cloud:
+    config:
+      server:
+        # 使用本地文件系统存储配置
+        native:
+          search-locations: classpath:/config-repo
+  profiles:
+    active: native
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.config: DEBUG

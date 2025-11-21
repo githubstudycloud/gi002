@@ -1,0 +1,44 @@
+server:
+  port: 9200
+
+spring:
+  application:
+    name: enterprise-auth
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+        namespace: public
+
+  # Redis 配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 1
+    password:
+    timeout: 10s
+    lettuce:
+      pool:
+        max-active: 200
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 0
+
+# JWT配置
+jwt:
+  # 密钥
+  secret: enterprise-secret-key-2024-springboot2-platform
+  # 令牌有效期（默认30分钟）
+  expiration: 1800000
+  # 刷新令牌有效期（默认7天）
+  refresh-expiration: 604800000
+
+# 日志配置
+logging:
+  level:
+    com.enterprise: debug

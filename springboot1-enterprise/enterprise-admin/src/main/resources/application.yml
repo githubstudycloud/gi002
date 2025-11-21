@@ -1,0 +1,31 @@
+server:
+  port: 18090  # 使用非常用端口
+
+spring:
+  application:
+    name: enterprise-admin
+  boot:
+    admin:
+      # 监控端点配置
+      routes:
+        endpoints: env,metrics,trace,dump,jolokia,info,configprops,trace,logfile,refresh,flyway,liquibase,heapdump,loggers,auditevents,hystrix.stream
+      # Turbine 配置
+      turbine:
+        clusters: default
+        location: enterprise-gateway
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    de.codecentric.boot.admin: DEBUG

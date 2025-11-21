@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: enterprise-gateway
+  cloud:
+    config:
+      # 从配置中心读取配置
+      discovery:
+        enabled: true
+        service-id: enterprise-config-server
+      profile: default
+      fail-fast: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/

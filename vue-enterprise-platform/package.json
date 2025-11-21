@@ -1,0 +1,39 @@
+{
+  "name": "vue-enterprise-platform",
+  "version": "1.0.0",
+  "description": "Vue3企业级多项目微前端框架基座",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "dev:main": "pnpm --filter main-app dev",
+    "dev:demo": "pnpm --filter vue-components-demo dev",
+    "dev:sub1": "pnpm --filter sub-app-1 dev",
+    "dev:sub2": "pnpm --filter sub-app-2 dev",
+    "dev:api": "pnpm --filter api-server dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{js,ts,vue,json,md}\"",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "vue3",
+    "typescript",
+    "vite",
+    "micro-frontend",
+    "qiankun",
+    "enterprise"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: vue-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: vue_enterprise
+      MYSQL_USER: vueuser
+      MYSQL_PASSWORD: vuepass
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - vue-network
+
+  # MongoDB数据库
+  mongodb:
+    image: mongo:6.0
+    container_name: vue-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: vue_enterprise
+      TZ: Asia/Shanghai
+    volumes:
+      - mongodb-data:/data/db
+      - ./mongodb/init:/docker-entrypoint-initdb.d
+    networks:
+      - vue-network
+
+  # Redis缓存
+  redis:
+    image: redis:7-alpine
+    container_name: vue-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass ""
+    volumes:
+      - redis-data:/data
+    networks:
+      - vue-network
+
+  # Redis Commander - Redis管理界面
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: vue-redis-commander
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:vue-redis:6379
+    networks:
+      - vue-network
+    depends_on:
+      - redis
+
+  # Adminer - 数据库管理界面
+  adminer:
+    image: adminer:latest
+    container_name: vue-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    networks:
+      - vue-network
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
+  mongodb-data:
+  redis-data:
+
+networks:
+  vue-network:
+    driver: bridge

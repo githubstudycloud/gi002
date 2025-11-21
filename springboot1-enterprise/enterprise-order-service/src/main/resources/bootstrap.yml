@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: enterprise-order-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: enterprise-config-server
+      profile: default
+      fail-fast: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka/

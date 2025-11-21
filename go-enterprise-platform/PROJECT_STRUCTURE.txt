@@ -1,0 +1,158 @@
+Go Enterprise Platform - 项目结构
+========================================
+
+go-enterprise-platform/
+│
+├── cmd/                                    # 应用程序入口
+│   ├── api-gateway/                       # API 网关服务 (端口 8080)
+│   ├── user-service/                      # 用户服务 (端口 8081)
+│   │   └── main.go                       # 用户服务主程序 ✓
+│   └── order-service/                     # 订单服务 (端口 8082)
+│
+├── pkg/                                    # 可复用的公共包
+│   ├── config/                            # 配置管理
+│   │   └── config.go                     # 配置加载和管理 ✓
+│   ├── logger/                            # 日志组件
+│   │   └── logger.go                     # Zap 日志封装 ✓
+│   ├── errors/                            # 错误处理
+│   │   └── errors.go                     # 统一错误码和响应 ✓
+│   ├── database/                          # 数据库连接
+│   │   ├── mysql/
+│   │   │   └── mysql.go                  # MySQL 客户端 ✓
+│   │   ├── postgres/
+│   │   │   └── postgres.go               # PostgreSQL 客户端 ✓
+│   │   └── mongodb/
+│   │       └── mongodb.go                # MongoDB 客户端 ✓
+│   ├── cache/                             # 缓存组件
+│   │   ├── redis/
+│   │   │   └── redis.go                  # Redis 客户端 ✓
+│   │   └── memcached/
+│   │       └── memcached.go              # Memcached 客户端 ✓
+│   ├── mq/                                # 消息队列
+│   │   ├── rabbitmq/                     # RabbitMQ 封装 (待实现)
+│   │   └── kafka/                        # Kafka 封装 (待实现)
+│   ├── registry/                          # 服务注册发现
+│   │   ├── consul/                       # Consul 客户端 (待实现)
+│   │   └── etcd/                         # Etcd 客户端 (待实现)
+│   ├── http/                              # HTTP 服务
+│   │   └── gin/
+│   │       └── server.go                 # Gin 服务器封装 ✓
+│   ├── grpc/                              # gRPC 服务 (待实现)
+│   ├── auth/                              # 认证授权
+│   │   ├── jwt/                          # JWT 认证 (待实现)
+│   │   ├── oauth2/                       # OAuth2 授权 (待实现)
+│   │   └── rbac/                         # RBAC 权限 (待实现)
+│   └── monitoring/                        # 监控追踪
+│       ├── prometheus/                   # Prometheus 集成 (待实现)
+│       └── jaeger/                       # Jaeger 追踪 (待实现)
+│
+├── internal/                              # 私有应用代码
+│   ├── user/                              # 用户服务业务逻辑
+│   │   ├── handler/
+│   │   │   └── user_handler.go          # HTTP 处理器 ✓
+│   │   ├── service/
+│   │   │   └── user_service.go          # 业务服务层 ✓
+│   │   ├── repository/
+│   │   │   └── user_repository.go       # 数据访问层 ✓
+│   │   └── model/
+│   │       └── user.go                  # 数据模型 ✓
+│   └── order/                             # 订单服务业务逻辑 (待实现)
+│       ├── handler/
+│       ├── service/
+│       ├── repository/
+│       └── model/
+│
+├── api/                                   # API 定义
+│   ├── proto/                            # gRPC protobuf 定义
+│   │   ├── user/
+│   │   └── order/
+│   └── http/                             # HTTP API 文档
+│
+├── deployments/                           # 部署配置
+│   ├── docker/                           # Docker 配置
+│   │   ├── docker-compose.yml           # 中间件编排配置 ✓
+│   │   └── prometheus.yml               # Prometheus 配置 ✓
+│   └── kubernetes/                       # K8s 配置
+│       ├── user-service/
+│       └── order-service/
+│
+├── scripts/                               # 脚本工具
+│   ├── start-services.sh                # 启动中间件脚本 ✓
+│   ├── test-services.sh                 # 测试服务连接 ✓
+│   └── init.sh                          # 初始化脚本
+│
+├── config/                                # 配置文件
+│   ├── config-dev.yaml                  # 开发环境配置 ✓
+│   ├── config-test.yaml                 # 测试环境配置
+│   └── config-prod.yaml                 # 生产环境配置
+│
+├── docs/                                  # 文档
+│   ├── API.md                           # API 接口文档 ✓
+│   ├── SUMMARY.md                       # 项目总结 ✓
+│   └── DEVELOPMENT.md                   # 开发指南
+│
+├── test/                                  # 集成测试
+│   ├── user_test.go
+│   └── integration/
+│
+├── .gitignore                            # Git 忽略文件 ✓
+├── go.mod                                # Go 模块定义 ✓
+├── go.sum                                # Go 依赖锁定
+├── Makefile                              # 构建脚本 ✓
+├── ARCHITECTURE.md                       # 架构设计文档 ✓
+├── README.md                             # 项目说明 ✓
+└── PROJECT_STRUCTURE.txt                 # 项目结构 ✓
+
+========================================
+统计信息
+========================================
+
+已完成组件:
+- ✓ 核心框架 (配置/日志/错误)
+- ✓ 数据库组件 (MySQL/PostgreSQL/MongoDB)
+- ✓ 缓存组件 (Redis/Memcached)
+- ✓ HTTP 服务框架 (Gin)
+- ✓ 用户服务示例 (完整实现)
+- ✓ Docker 中间件配置 (14个服务)
+- ✓ 开发脚本和工具
+- ✓ 完整文档
+
+待实现组件:
+- ⏳ 消息队列封装 (RabbitMQ/Kafka)
+- ⏳ 服务治理 (Consul/Etcd)
+- ⏳ gRPC 框架
+- ⏳ 认证授权 (JWT/OAuth2/RBAC)
+- ⏳ 监控追踪集成
+- ⏳ API 网关
+- ⏳ 订单服务示例
+
+========================================
+端口分配
+========================================
+
+应用服务:
+- API Gateway:        8080
+- User Service HTTP:  8081
+- User Service gRPC:  9091
+- Order Service HTTP: 8082
+- Order Service gRPC: 9092
+
+中间件服务:
+- MySQL:              3306
+- PostgreSQL:         5432
+- MongoDB:            27017
+- Redis:              6379
+- Memcached:          11211
+- RabbitMQ AMQP:      5672
+- RabbitMQ 管理界面:   15672
+- Kafka:              9092
+- Zookeeper:          2181
+- Consul:             8500
+- Etcd:               2379, 2380
+- Prometheus:         9090
+- Grafana:            3000
+- Jaeger UI:          16686
+- Jaeger Collector:   14268
+- Jaeger Agent:       6831
+
+========================================

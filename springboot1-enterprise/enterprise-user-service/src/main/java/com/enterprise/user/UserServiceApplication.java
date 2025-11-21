@@ -1,0 +1,29 @@
+package com.enterprise.user;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+
+/**
+ * 用户服务启动类
+ */
+@EnableCircuitBreaker
+@EnableFeignClients
+@EnableEurekaClient
+@MapperScan("com.enterprise.user.mapper")
+@SpringBootApplication(scanBasePackages = {"com.enterprise.user", "com.enterprise.common"})
+public class UserServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+        System.out.println("========================================");
+        System.out.println("User Service 启动成功！");
+        System.out.println("访问地址: http://localhost:18081");
+        System.out.println("Swagger文档: http://localhost:18081/swagger-ui.html");
+        System.out.println("========================================");
+    }
+
+}

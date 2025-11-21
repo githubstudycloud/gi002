@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # MySQL 8.0
+  mysql:
+    image: mysql:8.0
+    container_name: enterprise-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: enterprise_system
+      TZ: Asia/Shanghai
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ../sql:/docker-entrypoint-initdb.d
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max_connections=1000
+    networks:
+      - enterprise-network
+
+  # Redis 7.0
+  redis:
+    image: redis:7.0-alpine
+    container_name: enterprise-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - enterprise-network
+
+  # Nacos 2.2.0
+  nacos:
+    image: nacos/nacos-server:v2.2.0
+    container_name: enterprise-nacos
+    restart: always
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root
+      NACOS_AUTH_ENABLE: true
+      NACOS_AUTH_TOKEN: SecretKey012345678901234567890123456789012345678901234567890123456789
+      NACOS_AUTH_IDENTITY_KEY: nacos
+      NACOS_AUTH_IDENTITY_VALUE: nacos
+      TZ: Asia/Shanghai
+    volumes:
+      - ./nacos/logs:/home/nacos/logs
+      - ./nacos/data:/home/nacos/data
+    depends_on:
+      - mysql
+    networks:
+      - enterprise-network
+
+  # RabbitMQ 3.12
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: enterprise-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+      TZ: Asia/Shanghai
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/logs:/var/log/rabbitmq
+    networks:
+      - enterprise-network
+
+  # Elasticsearch 7.17
+  elasticsearch:
+    image: elasticsearch:7.17.15
+    container_name: enterprise-elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      TZ: Asia/Shanghai
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch/plugins:/usr/share/elasticsearch/plugins
+    networks:
+      - enterprise-network
+
+  # Kibana 7.17
+  kibana:
+    image: kibana:7.17.15
+    container_name: enterprise-kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      I18N_LOCALE: zh-CN
+      TZ: Asia/Shanghai
+    depends_on:
+      - elasticsearch
+    networks:
+      - enterprise-network
+
+  # Seata Server 1.7.1
+  seata-server:
+    image: seataio/seata-server:1.7.1
+    container_name: enterprise-seata
+    restart: always
+    ports:
+      - "7091:7091"
+      - "8091:8091"
+    environment:
+      SEATA_IP: 127.0.0.1
+      SEATA_PORT: 8091
+      STORE_MODE: db
+      TZ: Asia/Shanghai
+    volumes:
+      - ./seata/resources:/seata-server/resources
+    depends_on:
+      - mysql
+      - nacos
+    networks:
+      - enterprise-network
+
+networks:
+  enterprise-network:
+    driver: bridge

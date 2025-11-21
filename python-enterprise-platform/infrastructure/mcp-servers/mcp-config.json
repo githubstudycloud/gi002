@@ -1,0 +1,57 @@
+{
+  "mcpServers": {
+    "postgresql": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "POSTGRES_HOST": "localhost",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "postgres",
+        "POSTGRES_DB": "enterprise_db"
+      },
+      "description": "PostgreSQL数据库服务器"
+    },
+    "redis": {
+      "command": "python",
+      "args": ["-m", "mcp_server_redis"],
+      "env": {
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": "6379",
+        "REDIS_PASSWORD": "",
+        "REDIS_DB": "0"
+      },
+      "description": "Redis缓存服务器"
+    },
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-mongodb"],
+      "env": {
+        "MONGODB_URI": "mongodb://localhost:27017/enterprise_db"
+      },
+      "description": "MongoDB文档数据库服务器"
+    },
+    "rabbitmq": {
+      "command": "python",
+      "args": ["-m", "mcp_server_rabbitmq"],
+      "env": {
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_PORT": "5672",
+        "RABBITMQ_USER": "guest",
+        "RABBITMQ_PASSWORD": "guest",
+        "RABBITMQ_VHOST": "/"
+      },
+      "description": "RabbitMQ消息队列服务器"
+    },
+    "elasticsearch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-elasticsearch"],
+      "env": {
+        "ELASTICSEARCH_URL": "http://localhost:9200",
+        "ELASTICSEARCH_USER": "elastic",
+        "ELASTICSEARCH_PASSWORD": "changeme"
+      },
+      "description": "Elasticsearch搜索引擎服务器"
+    }
+  }
+}

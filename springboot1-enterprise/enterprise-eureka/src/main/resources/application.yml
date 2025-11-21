@@ -1,0 +1,30 @@
+server:
+  port: 18761  # 使用非常用端口
+
+spring:
+  application:
+    name: enterprise-eureka-server
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    # 不向注册中心注册自己
+    register-with-eureka: false
+    # 不从注册中心检索服务信息
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # 关闭自我保护模式（开发环境）
+    enable-self-preservation: false
+    # 清理无效节点的时间间隔（毫秒）
+    eviction-interval-timer-in-ms: 5000
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.netflix.eureka: WARN
+    com.netflix.discovery: WARN

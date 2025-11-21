@@ -1,0 +1,93 @@
+# 开发环境配置
+app:
+  name: go-enterprise-platform
+  version: 1.0.0
+  env: dev
+
+server:
+  http:
+    host: 0.0.0.0
+    port: 8080
+    read_timeout: 30s
+    write_timeout: 30s
+  grpc:
+    host: 0.0.0.0
+    port: 9090
+
+database:
+  mysql:
+    host: localhost
+    port: 3306
+    username: appuser
+    password: apppass123
+    database: enterprise_db
+    charset: utf8mb4
+    max_idle_conns: 10
+    max_open_conns: 100
+    conn_max_lifetime: 3600s
+
+  postgresql:
+    host: localhost
+    port: 5432
+    username: appuser
+    password: apppass123
+    database: enterprise_db
+    ssl_mode: disable
+    max_idle_conns: 10
+    max_open_conns: 100
+    conn_max_lifetime: 3600s
+
+  mongodb:
+    uri: mongodb://admin:admin123456@localhost:27017
+    database: enterprise_db
+
+redis:
+  host: localhost
+  port: 6379
+  password: redis123456
+  db: 0
+
+memcached:
+  servers:
+    - localhost:11211
+
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: admin
+  password: admin123456
+  vhost: /
+
+kafka:
+  brokers:
+    - localhost:9092
+  group_id: enterprise-group
+
+consul:
+  address: localhost:8500
+  scheme: http
+
+etcd:
+  endpoints:
+    - localhost:2379
+
+jwt:
+  secret: your-secret-key-change-in-production
+  expiration: 24h
+
+log:
+  level: debug
+  format: console
+  output_path: logs/app.log
+
+prometheus:
+  enabled: true
+  host: 0.0.0.0
+  port: 9100
+
+jaeger:
+  enabled: true
+  agent_host: localhost
+  agent_port: 6831
+  sampling_type: const
+  sampling_param: 1.0
